@@ -1,0 +1,806 @@
+/* Reset i podstawowe style */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e9eef3 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Nagłówek i nawigacja */
+header {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: white;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.header-content {
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.header-content h1 {
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.tagline {
+    font-style: italic;
+    color: #ecf0f1;
+    margin-top: 0.5rem;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    background: rgba(255,255,255,0.1);
+    font-weight: 500;
+}
+
+nav a:hover, nav a.active {
+    background: #e67e22;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Główna zawartość */
+main {
+    flex: 1;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    width: 100%;
+}
+
+/* Komunikaty */
+.message {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.message-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.message-info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+/* Sekcja hero */
+.hero {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255,255,255,0.9);
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.hero h2 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+/* Grid koni */
+.horses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    padding: 1rem 0;
+}
+
+.horse-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.horse-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.horse-image {
+    height: 250px;
+    overflow: hidden;
+}
+
+.horse-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.horse-card:hover .horse-image img {
+    transform: scale(1.1);
+}
+
+.horse-info {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.horse-info h3 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.horse-breed {
+    color: #e67e22;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+.horse-description {
+    color: #555;
+    margin-bottom: 1.5rem;
+    flex: 1;
+    line-height: 1.6;
+}
+
+.horse-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: auto;
+}
+
+.horse-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #27ae60;
+}
+
+.badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.badge.available {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge.unavailable {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.btn-reserve {
+    background: #e67e22;
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: inline-block;
+}
+
+.btn-reserve:hover {
+    background: #d35400;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Formularze autoryzacji */
+.auth-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+}
+
+.auth-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 450px;
+}
+
+.auth-container h2 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.auth-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.auth-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.auth-form input:focus {
+    outline: none;
+    border-color: #e67e22;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 1rem;
+    background: #e67e22;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-submit:hover {
+    background: #d35400;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(230, 126, 34, 0.3);
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.auth-links a {
+    color: #e67e22;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.auth-links a:hover {
+    text-decoration: underline;
+}
+
+.demo-accounts {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #e67e22;
+}
+
+.demo-accounts h3 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.demo-accounts p {
+    margin: 0.25rem 0;
+    font-size: 0.9rem;
+}
+
+.small {
+    font-size: 0.8rem;
+    color: #666;
+    font-style: italic;
+}
+
+/* Panel użytkownika */
+.my-reservations h2 {
+    color: #2c3e50;
+    margin-bottom: 2rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    background: white;
+    border-radius: 15px;
+    color: #666;
+}
+
+.empty-state a {
+    color: #e67e22;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.reservations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.reservation-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.reservation-image {
+    height: 150px;
+    overflow: hidden;
+}
+
+.reservation-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.reservation-info {
+    padding: 1.5rem;
+}
+
+.reservation-info h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.reservation-info p {
+    margin-bottom: 0.5rem;
+    color: #555;
+}
+
+.status-oczekujaca {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-potwierdzona {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-anulowana {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Panel administratora */
+.admin-panel h2, .users-panel h2 {
+    color: #2c3e50;
+    margin-bottom: 2rem;
+}
+
+.add-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.add-form h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+}
+
+.admin-table {
+    width: 100%;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border-collapse: collapse;
+}
+
+.admin-table th {
+    background: #2c3e50;
+    color: white;
+    padding: 1rem;
+    text-align: left;
+}
+
+.admin-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.admin-table tr:hover {
+    background: #f8f9fa;
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-edit, .btn-delete, .btn-role {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-edit {
+    background: #3498db;
+    color: white;
+}
+
+.btn-delete {
+    background: #e74c3c;
+    color: white;
+}
+
+.btn-role {
+    background: #f39c12;
+    color: white;
+}
+
+.btn-cancel {
+    background: #95a5a6;
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    display: inline-block;
+    margin-left: 0.5rem;
+}
+
+.text-muted {
+    color: #999;
+    font-style: italic;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background: white;
+    margin: 5% auto;
+    padding: 2rem;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.close {
+    position: absolute;
+    right: 1.5rem;
+    top: 1rem;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #999;
+}
+
+.close:hover {
+    color: #333;
+}
+
+/* Stopka */
+footer {
+    background: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: auto;
+}
+
+/* Responsywność */
+@media (max-width: 768px) {
+    .header-content h1 {
+        font-size: 2rem;
+    }
+    
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    nav a {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .horses-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .horse-card {
+        max-width: 100%;
+    }
+    
+    .admin-table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .horse-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .horse-price {
+        text-align: center;
+    }
+    
+    .btn-reserve {
+        text-align: center;
+    }
+    
+    .auth-container {
+        padding: 1rem;
+    }
+}
+
+/* WCAG - wysoki kontrast */
+@media (prefers-contrast: high) {
+    body {
+        background: white;
+        color: black;
+    }
+    
+    .horse-card {
+        border: 2px solid black;
+    }
+    
+    .btn-reserve, .btn-submit {
+        background: black;
+        color: white;
+        border: 2px solid white;
+    }
+    
+    a {
+        color: #0000EE;
+        text-decoration: underline;
+    }
+    
+    .badge {
+        border: 1px solid black;
+    }
+}
+
+/* Dostępność - fokus */
+:focus {
+    outline: 3px solid #e67e22;
+    outline-offset: 2px;
+}
+
+/* Wydruk */
+@media print {
+    header, footer, .btn-reserve, nav {
+        display: none;
+    }
+    
+    body {
+        background: white;
+        color: black;
+    }
+    
+    .horse-card {
+        break-inside: avoid;
+        border: 1px solid #ccc;
+    }
+}
+/* Panel zarządzania rezerwacjami */
+.reservations-panel {
+    padding: 20px 0;
+}
+
+.filters {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 8px 20px;
+    background: #ecf0f1;
+    color: #2c3e50;
+    text-decoration: none;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.filter-btn:hover {
+    background: #bdc3c7;
+}
+
+.filter-btn.active {
+    background: #e67e22;
+    color: white;
+}
+
+.reservation-admin-card {
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border-left: 5px solid #f39c12;
+    transition: transform 0.3s ease;
+}
+
+.reservation-admin-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.reservation-admin-card.potwierdzona {
+    border-left-color: #27ae60;
+}
+
+.reservation-admin-card.anulowana {
+    border-left-color: #e74c3c;
+    opacity: 0.8;
+}
+
+.reservation-admin-card.oczekujaca {
+    border-left-color: #f39c12;
+}
+
+.btn-confirm, .btn-cancel {
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.btn-confirm {
+    background: #27ae60;
+    color: white;
+}
+
+.btn-confirm:hover {
+    background: #229954;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+}
+
+.btn-cancel {
+    background: #e74c3c;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+}
+
+/* Responsywność dla kart rezerwacji */
+@media (max-width: 768px) {
+    .reservation-admin-card > div {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .reservation-image {
+        text-align: center;
+    }
+    
+    .reservation-actions {
+        flex-direction: row !important;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .reservations-summary > div {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .reservations-summary > div {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .filters {
+        justify-content: center;
+    }
+}

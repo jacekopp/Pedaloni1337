@@ -325,3 +325,228 @@ document.querySelectorAll('img').forEach(img => {
         this.alt = 'Domyślne zdjęcie konia';
     });
 });
+// Panel dostępności
+document.addEventListener('DOMContentLoaded', function() {
+    initAccessibilityPanel();
+    loadAccessibilitySettings();
+});
+
+function initAccessibilityPanel() {
+    const panel = document.querySelector('.accessibility-panel');
+    const toggle = document.querySelector('.accessibility-toggle');
+    
+    if (!panel || !toggle) return;
+    
+    // Otwieranie/zamykanie panelu
+    toggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        panel.classList.toggle('active');
+    });
+    
+    // Zamknięcie po kliknięciu poza panelem
+    document.addEventListener('click', function(e) {
+        if (!panel.contains(e.target)) {
+            panel.classList.remove('active');
+        }
+    });
+    
+    // Rozmiar czcionki - POPRAWIONA WERSJA
+document.querySelectorAll('.font-size-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.font-size-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        const size = this.dataset.size;
+        
+        // Usuń stare klasy rozmiaru
+        document.body.classList.remove('font-small', 'font-normal', 'font-large', 'font-xlarge');
+        
+        // Dodaj nową klasę
+        document.body.classList.add(`font-${size}`);
+        
+        console.log('Zmieniono rozmiar na:', size); // Test czy działa
+    });
+});
+    
+    // Kontrast
+    document.querySelectorAll('.contrast-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.contrast-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const contrast = this.dataset.contrast;
+            
+            // Usuń poprzednie klasy kontrastu
+            document.body.classList.remove('contrast-high', 'theme-dark');
+            
+            if (contrast === 'high') {
+                document.body.classList.add('contrast-high');
+            } else if (contrast === 'dark') {
+                document.body.classList.add('theme-dark');
+            }
+            
+            saveAccessibilitySetting('contrast', contrast);
+        });
+    });
+    
+    // Odstępy
+    document.querySelectorAll('.spacing-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.spacing-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const spacing = this.dataset.spacing;
+            document.body.classList.toggle('spacing-large', spacing === 'large');
+            saveAccessibilitySetting('spacing', spacing);
+        });
+    });
+    
+    // Animacje
+    document.querySelectorAll('.motion-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.motion-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const motion = this.dataset.motion;
+            if (motion === 'reduced') {
+                document.body.classList.add('reduced-motion');
+            } else {
+                document.body.classList.remove('reduced-motion');
+            }
+            saveAccessibilitySetting('motion', motion);
+        });
+    });
+    
+    // Czcionka (krój)
+    document.querySelectorAll('.readability-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.readability-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const font = this.dataset.readability;
+            document.body.className = document.body.className
+                .replace(/font-(serif|sans|mono)/g, '')
+                .trim();
+            document.body.classList.add(`font-${font}`);
+            saveAccessibilitySetting('fontFamily', font);
+        });
+    });
+    
+    // Linia pomocnicza
+    document.querySelectorAll('.ruler-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.ruler-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const ruler = this.dataset.ruler;
+            
+            // Usuń istniejące linie
+            document.querySelectorAll('.reader-line, .reader-ruler').forEach(el => el.remove());
+            
+            if (ruler === 'line') {
+                const line = document.createElement('div');
+                line.className = 'reader-line';
+                document.body.appendChild(line);
+            } else if (ruler === 'ruler') {
+                const ruler = document.createElement('div');
+                ruler.className = 'reader-ruler';
+                document.body.appendChild(ruler);
+            }
+            
+            saveAccessibilitySetting('ruler', ruler);
+        });
+    });
+    
+    // Reset wszystkiego
+    document.querySelector('.reset-all-btn')?.addEventListener('click', function() {
+        // Resetuj przyciski do domyślnych
+        document.querySelector('.font-size-btn.normal')?.click();
+        document.querySelector('.contrast-btn.normal')?.click();
+        document.querySelector('.spacing-btn.normal')?.click();
+        document.querySelector('.motion-btn.normal')?.click();
+        document.querySelector('.readability-btn.sans')?.click();
+        document.querySelector('.ruler-btn.off')?.click();
+        
+        // Usuń wszystkie linie
+        document.querySelectorAll('.reader-line, .reader-ruler').forEach(el => el.remove());
+        
+        // Wyczyść localStorage
+        localStorage.removeItem('accessibilitySettings');
+    });
+}
+
+// Zapisz ustawienia
+function saveAccessibilitySetting(key, value) {
+    let settings = JSON.parse(localStorage.getItem('accessibilitySettings') || '{}');
+    settings[key] = value;
+    localStorage.setItem('accessibilitySettings', JSON.stringify(settings));
+}
+
+// Wczytaj zapisane ustawienia
+function loadAccessibilitySettings() {
+    const settings = JSON.parse(localStorage.getItem('accessibilitySettings') || '{}');
+    
+    if (settings.fontSize) {
+        document.querySelector(`.font-size-btn[data-size="${settings.fontSize}"]`)?.click();
+    }
+    
+    if (settings.contrast) {
+        document.querySelector(`.contrast-btn[data-contrast="${settings.contrast}"]`)?.click();
+    }
+    
+    if (settings.spacing) {
+        document.querySelector(`.spacing-btn[data-spacing="${settings.spacing}"]`)?.click();
+    }
+    
+    if (settings.motion) {
+        document.querySelector(`.motion-btn[data-motion="${settings.motion}"]`)?.click();
+    }
+    
+    if (settings.fontFamily) {
+        document.querySelector(`.readability-btn[data-readability="${settings.fontFamily}"]`)?.click();
+    }
+    
+    if (settings.ruler && settings.ruler !== 'off') {
+        document.querySelector(`.ruler-btn[data-ruler="${settings.ruler}"]`)?.click();
+    }
+}
+
+// Dodaj obsługę klawiszy skrótów
+document.addEventListener('keydown', function(e) {
+    // Alt + A - otwórz panel dostępności
+    if (e.altKey && e.key === 'a') {
+        e.preventDefault();
+        document.querySelector('.accessibility-toggle')?.click();
+    }
+    
+    // Alt + + - zwiększ czcionkę
+    if (e.altKey && e.key === '+') {
+        e.preventDefault();
+        const currentSize = document.querySelector('.font-size-btn.active');
+        if (currentSize) {
+            const next = currentSize.nextElementSibling;
+            if (next && next.classList.contains('font-size-btn')) {
+                next.click();
+            }
+        }
+    }
+    
+    // Alt + - - zmniejsz czcionkę
+    if (e.altKey && e.key === '-') {
+        e.preventDefault();
+        const currentSize = document.querySelector('.font-size-btn.active');
+        if (currentSize) {
+            const prev = currentSize.previousElementSibling;
+            if (prev && prev.classList.contains('font-size-btn')) {
+                prev.click();
+            }
+        }
+    }
+});
+
+// Test - sprawdź po kliknięciu czy klasa została dodana
+document.querySelectorAll('.font-size-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        console.log('Aktualne klasy body:', document.body.className);
+    });
+});

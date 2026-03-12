@@ -66,3 +66,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     redirect('index.php');
 }
 ?>
+<?php
+require_once 'config.php';
+
+if (!isLoggedIn()) {
+    showMessage('Musisz się zalogować, aby dokonać rezerwacji!', 'error');
+    redirect('login.php');
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $kon_id = intval($_POST['kon_id'] ?? 0);
+    $data_od = $_POST['data_od'] ?? '';
+    $data_do = $_POST['data_do'] ?? '';
+    $user_id = $_SESSION['user_id'];
+
+    // Walidacja
+    if ($kon_id <= 0 || empty($data_od) || empty($data_do)) {
+        showMessage('Wypełnij wszystkie pola!', 'error');
+        redirect('index.php');
+    }
+
+    // Oblicz liczbę dni
+    $dni = (strtotime($data_do) - strtotime($data_od)) / (60 * 60 * 24) + 1;
+    
+    // Pobierz cenę konia
+    $stmt = $conn->prepare("SELECT cena_za_dobe FROM konie WHERE id = ?");
+    $stmt->bind_param("i", $kon_id);
+    $stmt->execute();
+    $cena = $stmt->get_result()->fetch_assoc()['cena_za_dobe'];
+    
+    // Oblicz cenę podstawową
+    $cena_podstawowa = $cena * $dni;
+    
+    // Sprawdź zniżkę od poleceń
+    $znizka = 0;
+    
+    // Sprawdź czy użytkownik był polecony
+    $stmt = $conn->prepare("SELECT czy_wykorzystany FROM poleceni_znajomi pz 
+                            JOIN polecenia p ON pz.id_polecenia = p.id 
+                            WHERE pz.email_znajomego = (SELECT email FROM uzytkownicy WHERE id = ?)");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0 && !$result->fetch_assoc()['czy_wykorzystany']) {
+        $znizka += 10; // 10% za pierwsze polecenie
+    }
+    
+    // Sprawdź zniżkę od polecania innych
+    $stmt = $conn->prepare("SELECT COUNT(*) as liczba FROM poleceni_znajomi pz 
+                            JOIN polecenia p ON pz.id_polecenia = p.id 
+                            WHERE p.id_uzytkownika = ? AND pz.czy_zarejestrowany = TRUE");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $polecenia = $stmt->get_result()->fetch_assoc()['liczba'];
+    
+    $znizka += min($polecenia * 10, 40); // Max 40% z poleceń
+    
+    // Maksymalna zniżka 50%
+    $znizka = min($znizka, 50);
+    
+    $cena_po_znizce = $cena_podstawowa * (1 - $znizka / 100);
+    
+    // Zapisz w sesji informację o zniżce
+    $_SESSION['znizka'] = $znizka;
+    $_SESSION['cena_po_znizce'] = $cena_po_znizce;
+    
+    // Reszta kodu rezerwacji...
+}

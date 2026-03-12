@@ -1,70 +1,29 @@
 <?php
 require_once 'config.php';
-
-// Jeśli już zalogowany, przekieruj na stronę główną
-if (isLoggedIn()) {
-    redirect('index.php');
-}
-
-$error = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username'] ?? '');
-    $password = $_POST['password'] ?? '';
-
-    if (empty($username) || empty($password)) {
-        $error = 'Wypełnij wszystkie pola!';
-    } else {
-        // Przygotuj zapytanie
-        $stmt = $conn->prepare("SELECT id, username, haslo, rola FROM uzytkownicy WHERE username = ? OR email = ?");
-        $stmt->bind_param("ss", $username, $username);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows === 1) {
-            $user = $result->fetch_assoc();
-            
-            
-            if (password_verify($password, $user['haslo'])) {
-                // Zalogowano pomyślnie
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['username'] = $user['username'];
-                $_SESSION['user_role'] = $user['rola'];
-                
-                showMessage('Zalogowano pomyślnie! Witaj ' . $user['username'], 'success');
-                redirect('index.php');
-            } else {
-                $error = 'Nieprawidłowe hasło!';
-            }
-        } else {
-            $error = 'Nie znaleziono użytkownika!';
-        }
-        $stmt->close();
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logowanie - KonZValony</title>
+    <title>Mapa dojazdu - KonZValony</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <header>
-    <div class="header-content">
-        <div class="logo-container">
-            <img src="images/image.png" alt="KonZValony - wypożyczalnia koni" class="logo">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="images/image.png" alt="KonZValony - wypożyczalnia koni" class="logo">
+            </div>
+            <h1>KonZValony</h1>
+            <p class="tagline">Wypożyczalnia koni, które mają więcej charakteru niż Twój były!</p>
         </div>
-        <h1>KonZValony</h1>
-        <p class="tagline">Wypożyczalnia koni, które mają więcej charakteru niż Twój były!</p>
-    </div>
         <nav>
             <ul>
-                <li><a href="index.php" class="active">Stajnia</a></li>
+                <li><a href="index.php">Stajnia</a></li>
                 <li><a href="blog.php">Blog</a></li>
-                <li><a href="mapa.php">Mapa</a></li>
+                <li><a href="mapa.php" class="active">Mapa</a></li>
                 <?php if (isLoggedIn()): ?>
                     <li><a href="panel.php">Panel</a></li>
                     <li><a href="ulubione.php">Ulubione</a></li>
@@ -79,44 +38,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </header>
 
     <main>
-        <section class="auth-section">
-            <div class="auth-container">
-                <h2>Logowanie do stajni</h2>
-                
-                <?php if ($error): ?>
-                    <div class="message message-error"><?php echo htmlspecialchars($error); ?></div>
-                <?php endif; ?>
-
-                <form method="POST" action="" class="auth-form">
-                    <div class="form-group">
-                        <label for="username">Nazwa użytkownika lub email:</label>
-                        <input type="text" id="username" name="username" required 
-                               placeholder="Wprowadź nazwę lub email"
-                               value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password">Hasło:</label>
-                        <input type="password" id="password" name="password" required 
-                               placeholder="Twoje hasło">
-                    </div>
-
-                    <div class="form-group">
-                        <button type="submit" class="btn-submit">Zaloguj się</button>
-                    </div>
-
-                    <p class="auth-links">
-                        Nie masz konta? <a href="register.php">Zarejestruj się</a>
-                    </p>
-                </form>
-            </div>
+        <section class="map-header">
+            <h2><i class="fas fa-map-marked-alt"></i> Gdzie nas znaleźć?</h2>
+            <p>Stajnia KonZValony znajduje się w malowniczej okolicy, z dala od zgiełku miasta</p>
         </section>
+
+        <div class="map-container">
+            <div class="map-info">
+                <div class="info-card">
+                    <h3><i class="fas fa-location-dot"></i> Adres</h3>
+                    <p>Stajnia KonZValony<br>
+                    ul. Leśna 12<br>
+                    05-500 Konstancin-Jeziorna</p>
+                    
+                    <h3><i class="fas fa-phone"></i> Kontakt</h3>
+                    <p>Tel: +48 123 456 789<br>
+                    Email: stajnia@konzvalony.pl</p>
+                    
+                    <h3><i class="fas fa-clock"></i> Godziny otwarcia</h3>
+                    <p>Pon-Pt: 8:00 - 18:00<br>
+                    Sob: 9:00 - 16:00<br>
+                    Nd: Nieczynne</p>
+                    
+                    <h3><i class="fas fa-car"></i> Dojazd</h3>
+                    <p>Z Warszawy: jedź drogą nr 724 w kierunku Konstancina. Za mostem w prawo, po 2 km skręć w Leśną. Stajnia znajduje się 500 m za skrętem.</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3><i class="fas fa-tree"></i> Okolica</h3>
+                    <ul>
+                        <li><i class="fas fa-tree"></i> Rezerwat przyrody "Las Kabacki" - 3 km</li>
+                        <li><i class="fas fa-water"></i> Wisła - 2 km</li>
+                        <li><i class="fas fa-utensils"></i> Restauracja "Pod Kasztanem" - 500 m</li>
+                        <li><i class="fas fa-parking"></i> Bezpłatny parking dla klientów</li>
+                        <li><i class="fas fa-bus"></i> Przystanek autobusowy - 200 m</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Mapa Google -->
+            <div class="map-iframe">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2443.482847615573!2d21.09794431579674!3d52.22967597975995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ecc5f3b7b7b7b%3A0x3b7b7b7b7b7b7b!2sWarsaw!5e0!3m2!1sen!2spl!4v1620000000000!5m2!1sen!2spl" 
+                    width="100%" 
+                    height="450" 
+                    style="border:0; border-radius: 20px;" 
+                    allowfullscreen="" 
+                    loading="lazy">
+                </iframe>
+            </div>
+        </div>
     </main>
 
     <footer>
         <p>&copy; 2026 KonZValony - Wypożyczalnia koni z humorem</p>
+        <p class="small">* Nie ponosimy odpowiedzialności za rozerwanie oka saurona</p>
     </footer>
-<!-- Panel dostępności - umieszczony PRZED skryptem i wewnątrz body -->
+
+    <!-- Panel dostępności -->
     <div class="accessibility-panel">
         <button class="accessibility-toggle" aria-label="Otwórz panel dostępności">
             <span class="accessibility-icon">♿</span>
@@ -187,5 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
